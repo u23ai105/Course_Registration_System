@@ -1,0 +1,10 @@
+[{
+  "password": "123",
+  "currentSemester": 1,
+  "totalCredits": 19,
+  "completedCourses": [],
+  "name": "a",
+  "enrolledCourses": ["PHY100"],
+  "id": "USER1728835740262",
+  "email": "abc@gmail.com"
+}]

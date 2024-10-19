@@ -1,0 +1,106 @@
+[{
+    "id": "admin001",
+    "name": "Alice Johnson",
+	"role":"Administrator",
+    "email": "alice@gmail.com",
+    "password": "123456",
+    "courseCatalog": {
+        "CS101": {
+            "prerequisites": [],
+            "code": "CS101",
+            "semester": 1,
+            "credits": 3,
+            "timings": "Mon, Wed, Fri 10:00 - 11:30 AM",
+            "enrollmentLimit": 30,
+            "location": "Building A, Room 101",
+            "enrolledStudents": [],
+            "title": "Introduction to Computer Science",
+            "department": "Computer Science"
+        },
+        "MATH101": {
+            "prerequisites": [],
+            "code": "MATH101",
+            "semester": 1,
+            "credits": 4,
+            "timings": "Tue, Thu 9:00 - 10:30 AM",
+            "enrollmentLimit": 40,
+            "location": "Building B, Room 202",
+            "enrolledStudents": ["USER1728835740262"],
+            "title": "Calculus I",
+            "department": "Mathematics"
+        },
+        "ENG101": {
+            "prerequisites": [],
+            "code": "ENG101",
+            "semester": 1,
+            "credits": 3,
+            "timings": "Mon, Wed 1:00 - 2:30 PM",
+            "enrollmentLimit": 35,
+            "location": "Building C, Room 303",
+            "enrolledStudents": ["USER1728835740262"],
+            "title": "English Composition",
+            "department": "English"
+        },
+        "PHY101": {
+            "prerequisites": [],
+            "code": "PHY101",
+            "semester": 1,
+            "credits": 4,
+            "timings": "Tue, Thu 11:00 AM - 12:30 PM",
+            "enrollmentLimit": 30,
+            "location": "Building D, Room 404",
+            "enrolledStudents": ["USER1728835740262"],
+            "title": "General Physics I",
+            "department": "Physics"
+        },
+        "CHEM101": {
+            "prerequisites": [],
+            "code": "CHEM101",
+            "semester": 1,
+            "credits": 4,
+            "timings": "Mon, Wed 3:00 - 4:30 PM",
+            "enrollmentLimit": 30,
+            "location": "Building E, Room 505",
+            "enrolledStudents": ["USER1728835740262"],
+            "title": "General Chemistry I",
+            "department": "Chemistry"
+        },
+        "HIST101": {
+            "prerequisites": [],
+            "code": "HIST101",
+            "semester": 1,
+            "credits": 3,
+            "timings": "Tue, Thu 2:00 - 3:30 PM",
+            "enrollmentLimit": 40,
+            "location": "Building F, Room 606",
+            "enrolledStudents": ["USER1728835740262"],
+            "title": "World History",
+            "department": "History"
+        }
+    },
+    "studentRecords": {
+        "USER1728835740262": {
+            "password": "123",
+            "currentSemester": 1,
+            "totalCredits": 15,
+            "completedCourses": [],
+            "name": "a",
+            "enrolledCourses": [
+                "MATH101",
+                "PHY101",
+                "HIST101",
+                "CHEM101"
+            ],
+            "id": "USER1728835740262",
+            "email": "abc@gmail.com"
+        },
+        "USER1728964725995": {
+            "password": "123",
+            "name": "xyz",
+            "id": "USER1728964725995",
+            "department": "Computer Science",
+            "email": "xyz@gmail.com"
+        }
+    },
+    "complaints": {}
+}]

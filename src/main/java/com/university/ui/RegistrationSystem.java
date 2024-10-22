@@ -1,9 +1,12 @@
 package com.university.ui;
 
 import com.university.models.User;
+import com.university.repositories.ComplaintRepository;
+import com.university.repositories.ComplaintRepository;
 import com.university.models.Student;
 import com.university.models.Professor;
 import com.university.models.Administrator;
+import com.university.models.Complaint;
 import com.university.models.Course; 
 import com.university.services.UserService;
 import com.university.services.StudentService;
@@ -169,9 +172,12 @@ public class RegistrationSystem {
                     viewGrades(student);
                     break;
                 case 6:
+                    viewcomplaints(student);
+                    break;    
+                case 7:
                     submitComplaint(student);
                     break;
-                case 7:
+                case 8:
                     System.out.println("Logging out...");
                     return;
                 default:
@@ -180,6 +186,7 @@ public class RegistrationSystem {
         }
     }
     
+    //1.view available course
     private void viewAvailableCourses() {
         List<Course> availableCourses = studentService.viewAvailableCourses();
         if (availableCourses.isEmpty()) {
@@ -192,7 +199,45 @@ public class RegistrationSystem {
             }
         }
     }
+    
+    // 2. enroll courses 
+    private void enrollInCourse(Student student) {
+        System.out.print("Select your semester (1, 2, ...): ");
+        int semester=student.getCurrentSemester();
+//        int semester = scanner.nextInt();
+//        scanner.nextLine(); // Consume newline
 
+        // Fetch available courses for the selected semester
+        List<Course> availableCourses = studentService.viewAvailableCoursesForSemester(semester);
+        if (availableCourses.isEmpty()) {
+            System.out.println("No available courses for semester " + semester);
+            return;
+        }
+
+        // Display available courses
+        System.out.println("Available Courses for Semester " + semester + ":");
+        for (Course course : availableCourses) {
+            System.out.printf("Code: %s, Title: %s, Credits: %d%n", course.getCode(), course.getTitle(), course.getCredits());
+        }
+
+        System.out.print("Enter the course code to enroll: ");
+        String courseCode = scanner.nextLine();
+        int credits=0;
+        for (Course course : availableCourses) {
+        	System.out.println(course.getCredits());
+        	if(course.getCode().equals(courseCode)) credits=course.getCredits();
+        	System.out.println(credits);
+           // System.out.printf("Code: %s, Title: %s, Credits: %d%n", course.getCode(), course.getTitle(), course.getCredits());
+        }
+        boolean success = studentService.enrollInCourse(student, courseCode,credits);
+        if (success) {
+            System.out.println("Successfully enrolled in " + courseCode);
+        } else {
+            System.out.println("Failed to enroll in " + courseCode + ". Please check prerequisites or enrollment limits.");
+        }
+    }
+    
+    //3. view enrolled courses
     private void viewEnrolledCourses(Student student) {
         List<Course> enrolledCourses = studentService.viewEnrolledCourses(student);
         if (enrolledCourses.isEmpty()) {
@@ -205,7 +250,30 @@ public class RegistrationSystem {
             }
         }
     }
-
+    
+    //4. drop courses
+    private void dropCourse(Student student) {
+   	 List<String> enrolledCourses=student.getEnrolledCourses();
+   	 for(String Course : enrolledCourses) System.out.println(Course);
+   	 System.out.println("Enter the course code to drop it");
+   	 String courseCode=scanner.nextLine();
+   	 int credits=0;
+   	 List<Course> availableCourses = studentService.viewAvailableCoursesForSemester(student.getCurrentSemester());
+        for (Course course : availableCourses) {
+        	//System.out.println(course.getCredits());
+        	if(course.getCode().equals(courseCode)) credits=course.getCredits();
+        	//System.out.println(credits);
+           // System.out.printf("Code: %s, Title: %s, Credits: %d%n", course.getCode(), course.getTitle(), course.getCredits());
+        }
+        boolean success = studentService.dropCourse(student, courseCode,credits);
+        if (success) {
+            System.out.println("Successfully dropped the " + courseCode);
+        } else {
+            System.out.println("Failed to drop the " + courseCode);
+        }
+   }
+    
+    //5. view enrolled grades
     private void viewGrades(Student student) {
         List<String> grades = studentService.viewGrades(student);
         if (grades.isEmpty()) {
@@ -216,6 +284,32 @@ public class RegistrationSystem {
                 System.out.println(grade);
             }
         }
+    }
+    
+    //6. view complaints
+    private void viewcomplaints(Student student) {
+    	List<Complaint> complaints=studentService.viewComplaint(student);
+    	if (complaints.isEmpty()) {
+            System.out.println("No grades available.");
+        } else {
+            System.out.println("Your Grades:");
+            for (Complaint complaint : complaints) {
+            	System.out.println(complaint.getId());
+                System.out.println(complaint.getStudentId());
+                System.out.println(complaint.getDescription());
+                System.out.println(complaint.getStatus());
+                System.out.println(complaint.getSubmissionDate());
+            }
+        }
+    }
+    
+    //7. submit complaints
+    private void submitComplaint(Student student) {
+        System.out.print("Enter your complaint: ");
+        String complaintText = scanner.nextLine();
+        // Assuming there's a method in the StudentService to submit a complaint
+        studentService.submitComplaint(student, complaintText);
+        System.out.println("Complaint submitted successfully!");
     }
 
     private void showProfessorMenu(Professor professor) {
@@ -283,64 +377,6 @@ public class RegistrationSystem {
     }
     
 
-    // Helper methods for student actions
-    private void enrollInCourse(Student student) {
-        System.out.print("Select your semester (1, 2, ...): ");
-        int semester=student.getCurrentSemester();
-//        int semester = scanner.nextInt();
-//        scanner.nextLine(); // Consume newline
-
-        // Fetch available courses for the selected semester
-        List<Course> availableCourses = studentService.viewAvailableCoursesForSemester(semester);
-        if (availableCourses.isEmpty()) {
-            System.out.println("No available courses for semester " + semester);
-            return;
-        }
-
-        // Display available courses
-        System.out.println("Available Courses for Semester " + semester + ":");
-        for (Course course : availableCourses) {
-            System.out.printf("Code: %s, Title: %s, Credits: %d%n", course.getCode(), course.getTitle(), course.getCredits());
-        }
-
-        System.out.print("Enter the course code to enroll: ");
-        String courseCode = scanner.nextLine();
-        int credits=0;
-        for (Course course : availableCourses) {
-        	System.out.println(course.getCredits());
-        	if(course.getCode().equals(courseCode)) credits=course.getCredits();
-        	System.out.println(credits);
-           // System.out.printf("Code: %s, Title: %s, Credits: %d%n", course.getCode(), course.getTitle(), course.getCredits());
-        }
-        boolean success = studentService.enrollInCourse(student, courseCode,credits);
-        if (success) {
-            System.out.println("Successfully enrolled in " + courseCode);
-        } else {
-            System.out.println("Failed to enroll in " + courseCode + ". Please check prerequisites or enrollment limits.");
-        }
-    }
-
-    private void dropCourse(Student student) {
-    	 List<String> enrolledCourses=student.getEnrolledCourses();
-    	 for(String Course : enrolledCourses) System.out.println(Course);
-    	 System.out.println("Enter the course code to drop it");
-    	 String courseCode=scanner.nextLine();
-    	 int credits=0;
-    	 List<Course> availableCourses = studentService.viewAvailableCoursesForSemester(student.getCurrentSemester());
-         for (Course course : availableCourses) {
-         	//System.out.println(course.getCredits());
-         	if(course.getCode().equals(courseCode)) credits=course.getCredits();
-         	//System.out.println(credits);
-            // System.out.printf("Code: %s, Title: %s, Credits: %d%n", course.getCode(), course.getTitle(), course.getCredits());
-         }
-         boolean success = studentService.dropCourse(student, courseCode,credits);
-         if (success) {
-             System.out.println("Successfully dropped the " + courseCode);
-         } else {
-             System.out.println("Failed to drop the " + courseCode);
-         }
-    }
-
     private void viewassignedcourses(Professor professor) {
     	List<Course> availableCourses=professorService.viewAssignedCourses(professor);
     	if(availableCourses.isEmpty()) {
@@ -357,19 +393,22 @@ public class RegistrationSystem {
             System.out.printf("Code: %s, Title: %s, Credits: %d%n", course.getCode(), course.getTitle(), course.getCredits());
          }
     }
-    private void submitComplaint(Student student) {
-        System.out.print("Enter your complaint: ");
-        String complaintText = scanner.nextLine();
-        // Assuming there's a method in the StudentService to submit a complaint
-        studentService.submitComplaint(student, complaintText);
-        System.out.println("Complaint submitted successfully!");
-    }
+    
 
     // Helper methods for professor actions
     private void viewCourseRoster(Professor professor) {
         System.out.print("Enter the course code to view the roster: ");
         String courseCode = scanner.nextLine();
         
+        List<Course> availableCourses=professorService.viewAssignedCourses(professor);
+        boolean check=false;
+        for (Course course : availableCourses) {
+        if(course.getCode().equals(courseCode)) check=true;
+        }
+        if(check==false){
+        	System.out.println("The course is not assigned to this profesor");
+        	return;
+        }
         List<Student> enrolledStudents = professorService.viewCourseRoster(courseCode);
         if (enrolledStudents.isEmpty()) {
             System.out.println("No students are enrolled in this course.");
@@ -384,6 +423,16 @@ public class RegistrationSystem {
     private void assignGrades(Professor professor) {
         System.out.print("Enter the course code for which you want to assign grades: ");
         String courseCode = scanner.nextLine();
+        
+        List<Course> availableCourses=professorService.viewAssignedCourses(professor);
+        boolean check=false;
+        for (Course course : availableCourses) {
+        if(course.getCode().equals(courseCode)) check=true;
+        }
+        if(check==false){
+        	System.out.println("The course is not assigned to this profesor");
+        	return;
+        }
         
         List<Student> enrolledStudents = professorService.viewCourseRoster(courseCode);
         if (enrolledStudents.isEmpty()) {
@@ -427,6 +476,10 @@ public class RegistrationSystem {
     private void addCourse() {
         System.out.print("Enter course code: ");
         String code = scanner.nextLine();
+        if(administratorService.iscourseexist(code)) {
+        	System.out.println("This course already exist");
+        	return;
+        }
         System.out.print("Enter course title: ");
         String title = scanner.nextLine();
         System.out.print("Enter credits: ");
@@ -443,9 +496,27 @@ public class RegistrationSystem {
         String department = scanner.nextLine();
         System.out.print("Enter semester: ");
         int semester = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
-
+        scanner.nextLine(); 
+        // Consume newline
+        
         Course newCourse = new Course(code, title, credits, timings, location, enrollmentLimit, department, semester);
+        if (semester >= 2) {
+            boolean check = true;
+            while (check) {
+                System.out.println("Enter 1 if you want to add more prerequisites");
+                System.out.println("Enter any other value if you do not want to add more prerequisites");
+                int temp = scanner.nextInt();
+                scanner.nextLine(); 
+
+                if (temp == 1) {
+                    System.out.print("Enter prerequisite course code: ");
+                    String preq = scanner.nextLine(); 
+                    newCourse.addPrerequisite(preq); 
+                } else {
+                    check = false; 
+                }
+            }
+        }
         administratorService.addCourse(newCourse);
         System.out.println("Course added successfully!");
     }
@@ -478,9 +549,26 @@ public class RegistrationSystem {
             System.out.print("Enter new semester (leave blank to keep current): ");
             String semesterInput = scanner.nextLine();
             if (!semesterInput.isEmpty()) existingCourse.setSemester(Integer.parseInt(semesterInput));
-
+            while(true) {
+            System.out.println("enter 1 to add prerequistes");
+            System.out.println("else 0");
+            int val=scanner.nextInt();
+            scanner.nextLine();
+            if(val==0) break;
+            System.out.println("Enter the prerequiste to be updated or added");
+            String preq;
+            preq=scanner.nextLine();
+            if(existingCourse.isprerequisteexist(preq)) {
+            	System.out.println("This prerequiste already exists");
+            }
+            else{
+            	existingCourse.addPrerequisite(preq);
+            	System.out.println("The prerequiste is added sucessfully");
+            }
+            
+            }
             administratorService.updateCourse(existingCourse);
-            System.out.println("Course updated successfully!");
+            //System.out.println("Course updated successfully!");
         } else {
             System.out.println("Course not found.");
         }
@@ -490,7 +578,7 @@ public class RegistrationSystem {
         System.out.print("Enter course code to delete: ");
         String code = scanner.nextLine();
         administratorService.deleteCourse(code);
-        System.out.println("Course deleted successfully!");
+       // System.out.println("Course deleted successfully!");
     }
 
     private void manageStudentRecords() {
@@ -510,7 +598,7 @@ public class RegistrationSystem {
                 updateStudentInfo();
                 break;
             case 3:
-                //deleteStudent();
+                deleteStudent();
                 break;
             default:
                 System.out.println("Invalid option. Please try again.");
@@ -532,25 +620,55 @@ public class RegistrationSystem {
     private void updateStudentInfo() {
         System.out.print("Enter student ID to update: ");
         String studentId = scanner.nextLine();
-        //Optional<Student> studentOpt = StudentService.getByStudentId(studentId);
+        
+        // Retrieve the student using the service
         Optional<Student> studentOpt = studentService.getByStudentId(studentId);
+        
         if (studentOpt.isPresent()) {
             Student student = studentOpt.get(); // Get the Student object
-            // Proceed with your logic using the student object
-            System.out.println("Student Name: " + student.getName());
-        } else {
-            // Handle the case where the student is not found
-            System.out.println("Student not found.");
-        }
-        if (studentOpt.isPresent()) {
-            Student student = studentOpt.get();
+            System.out.println("Current Student Information:");
+            System.out.println("Name: " + student.getName());
+            System.out.println("Email: " + student.getEmail());
+            System.out.println("Current Semester: " + student.getCurrentSemester());
+            System.out.println("Total Credits: " + student.gettotalCredits());
+            System.out.println("Enrolled Courses: " + String.join(", ", student.getEnrolledCourses()));
+            
+            // Update student details
             System.out.print("Enter new name (leave blank to keep current): ");
             String name = scanner.nextLine();
             if (!name.isEmpty()) student.setName(name);
+            
             System.out.print("Enter new email (leave blank to keep current): ");
             String email = scanner.nextLine();
             if (!email.isEmpty()) student.setEmail(email);
-            // Add more fields as needed
+            
+            System.out.print("Enter new current semester (leave blank to keep current): ");
+            String semesterInput = scanner.nextLine();
+            if (!semesterInput.isEmpty()) {
+                int newSemester = Integer.parseInt(semesterInput);
+                student.setCurrentSemester(newSemester);
+            }
+            
+            System.out.print("Enter new total credits (leave blank to keep current): ");
+            String creditsInput = scanner.nextLine();
+            if (!creditsInput.isEmpty()) {
+                int newTotalCredits = Integer.parseInt(creditsInput);
+                student.settotalCredits(newTotalCredits);
+            }
+            
+            // Optionally update enrolled courses
+            System.out.print("Do you want to update enrolled courses? (yes/no): ");
+            String updateCoursesResponse = scanner.nextLine();
+            if (updateCoursesResponse.equalsIgnoreCase("yes")) {
+                System.out.print("Enter enrolled courses (comma-separated): ");
+                String coursesInput = scanner.nextLine();
+                String[] courses = coursesInput.split(",");
+                for (String course : courses) {
+                    student.enrollCourse(course.trim()); // Trim whitespace and enroll
+                }
+            }
+
+            // Call the service to update the student information
             administratorService.updateStudent(student);
             System.out.println("Student information updated successfully!");
         } else {
@@ -558,12 +676,12 @@ public class RegistrationSystem {
         }
     }
 
-//    private void deleteStudent() {
-//        System.out.print("Enter student ID to delete: ");
-//        String studentId = scanner.nextLine();
-//        administratorService.deleteStudent(studentId);
-//        System.out.println("Student deleted successfully!");
-//    }
+    private void deleteStudent() {
+        System.out.print("Enter student ID to delete: ");
+        String studentId = scanner.nextLine();
+        administratorService.deletestudent(studentId);
+        System.out.println("Student deleted successfully!");
+    }
 
 //    private void assignProfessorsToCourses() {
 //        System.out.print("Enter course code to assign a professor: ");

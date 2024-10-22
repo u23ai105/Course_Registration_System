@@ -49,6 +49,12 @@ public class StudentServiceImpl implements StudentService {
             return false; // Already enrolled
         }
         
+        for(String preq : course.getPrerequisites()) {
+        	if(!student.hasCompleted(preq)) {
+        		return false;
+        	}
+        }
+        
         // Attempt to enroll the student in the course
         if (student.enrollCourse(courseCode, credits)) {
             course.enrollStudent(student.getId());
@@ -102,6 +108,10 @@ public class StudentServiceImpl implements StudentService {
     public void submitComplaint(Student student, String complaintText) {
         Complaint complaint = new Complaint(student.getId(), complaintText);
         complaintRepository.save(complaint);
+    }
+    
+    public List<Complaint> viewComplaint(Student student){
+    	return complaintRepository.findByStudentId(student.getId());
     }
 
     // Additional helper methods

@@ -1,6 +1,7 @@
 package com.university.services;
 
 import com.university.models.Student;
+import com.university.models.Complaint;
 import com.university.models.Course;
 import java.util.List;
 import java.util.Optional;
@@ -55,6 +56,8 @@ public interface StudentService {
      * @param complaintText The text of the complaint
      */
     void submitComplaint(Student student, String complaintText);
+    
+    List<Complaint> viewComplaint(Student student);
 
     /**
      * Retrieves a student by their ID.

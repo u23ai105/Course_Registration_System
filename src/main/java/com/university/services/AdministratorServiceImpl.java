@@ -107,6 +107,16 @@ public class AdministratorServiceImpl implements AdministratorService {
             System.out.println("Student not found.");
         }
     }
+    
+    public void deletestudent(String studentId) {
+    	Optional<Student> existingStudentOpt = studentRepository.findById(studentId);
+    	if (existingStudentOpt.isPresent()) {
+            studentRepository.delete(studentId); // Save the updated student record
+            System.out.println("Student record deleted successfully!");
+        } else {
+            System.out.println("Student not found.");
+        }
+    }
 
     @Override
     public void assignProfessorToCourse(String professorId, String courseCode) {
@@ -167,6 +177,10 @@ public class AdministratorServiceImpl implements AdministratorService {
         } else {
             System.out.println("Course not found.");
         }
+    }
+    
+    public boolean iscourseexist(String Coursecode) {
+    	return courseRepository.isCourseCode(Coursecode);
     }
     
 //    @Override

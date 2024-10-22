@@ -1,5 +1,7 @@
 package com.university.repositories;
 
+import com.university.models.Complaint;
+import com.university.repositories.ComplaintRepositoryImpl;
 import com.university.models.Student;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -141,4 +143,9 @@ public class StudentRepository extends JsonRepository<Student> {
                 .filter(student -> student.getCurrentSemester() > 8 && student.getCompletedCourses().size() >= 40)
                 .collect(Collectors.toList());
     }
+    
+//    public List<Complaint> displaycomplaints(String studentId) {
+//    	ComplaintRepository c;
+//    	return ComplaintRepository.findByStudentId(studentId);
+//    }
 }

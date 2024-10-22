@@ -76,6 +76,9 @@ public interface CourseRepository extends Repository<Course> {
      * @return An Optional containing the course if found, or an empty Optional if not found
      */
     Optional<Course> findByCourseCode(String courseCode);
+    
+    
+    public boolean isCourseCode(String courseCode);
 
     /**
      * Updates the details of an existing course.

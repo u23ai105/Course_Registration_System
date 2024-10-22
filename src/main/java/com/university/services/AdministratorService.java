@@ -26,4 +26,6 @@ public interface AdministratorService {
     Optional<Course> findByCourseCode(String courseCode);
     void updateCourse(Course course);
     void deleteCourse(String courseCode);
+    boolean iscourseexist(String Coursecode);
+    void deletestudent(String studentId);
 }

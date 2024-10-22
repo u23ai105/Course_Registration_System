@@ -23,7 +23,7 @@ public class CourseRepositoryImpl extends JsonRepository<Course> implements Cour
             jsonObject.getString("location"),
             jsonObject.getInt("enrollmentLimit"),
             jsonObject.getString("department"),
-            jsonObject.getInt("Semester") // Change "Semester" to "semester"
+            jsonObject.getInt("Semester")// Change "Semester" to "semester"
         );
         course.setProfessorId(jsonObject.optString("professorId", null));
         
@@ -112,6 +112,11 @@ public class CourseRepositoryImpl extends JsonRepository<Course> implements Cour
                 .findFirst();
     }
     
+    public boolean isCourseCode(String courseCode) {
+    	Optional<Course> course = findByCourseCode(courseCode);
+    	return course.isPresent();
+    }
+    
     @Override
     public void updateCourse(Course course) {
         // Find the existing course by its code
@@ -144,5 +149,16 @@ public class CourseRepositoryImpl extends JsonRepository<Course> implements Cour
         return findAll().stream()
                 .filter(course -> department.equals(course.getDepartment()))
                 .collect(Collectors.toList());
+    }
+    
+    public synchronized void delete(String id) {
+        JSONArray jsonArray = readJsonArray();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (jsonArray.getJSONObject(i).getString("code").equals(id)) {
+                jsonArray.remove(i);
+                break;
+            }
+        }
+        writeJsonArray(jsonArray);
     }
 }

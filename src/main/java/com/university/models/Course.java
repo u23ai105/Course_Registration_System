@@ -147,6 +147,13 @@ public class Course {
     public int getAvailableSeats() {
         return enrollmentLimit - enrolledStudents.size();
     }
+    
+    public boolean isprerequisteexist(String pre) {
+    	for(String preq: prerequisites) {
+    		if(preq.equals(pre)) return true;
+    	}
+    	return false;
+    }
 
     @Override
     public String toString() {

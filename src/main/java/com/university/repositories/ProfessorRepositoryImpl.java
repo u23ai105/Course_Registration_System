@@ -45,7 +45,7 @@ public class ProfessorRepositoryImpl extends JsonRepository<Professor> implement
     
     public Optional<Professor> findById(String id) {
         return findAll().stream()
-                .filter(professor -> professor.getName().equals(id))
+                .filter(professor -> professor.getId().equals(id))
                 .findFirst();
     }
     

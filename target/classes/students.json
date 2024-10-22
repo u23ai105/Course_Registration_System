@@ -1,1 +1,14 @@
-[]
+[{
+  "password": "1234",
+  "currentSemester": 1,
+  "totalCredits": 7,
+  "completedCourses": [],
+  "name": "Ranbir",
+  "enrolledCourses": [
+    "CS101",
+    "MATH101",
+    "CS102"
+  ],
+  "id": "USER1729579707602",
+  "email": "ranbir@gmail.com"
+}]

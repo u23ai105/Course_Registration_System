@@ -28,4 +28,5 @@ public interface AdministratorService {
     void deleteCourse(String courseCode);
     boolean iscourseexist(String Coursecode);
     void deletestudent(String studentId);
+    //void assignProfessorToCourse(String professorId, String courseCode);
 }

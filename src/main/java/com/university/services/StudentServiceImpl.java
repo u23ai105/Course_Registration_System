@@ -39,13 +39,15 @@ public class StudentServiceImpl implements StudentService {
     }
     @Override
     public boolean enrollInCourse(Student student, String courseCode, int credits) {
+    	if(!courseRepository.isCourseCode(courseCode)) {
+    		System.out.println("Course doesnot exist in the course catalog");
+    		return false;
+    	}
         Course course = courseRepository.findByCourseCode(courseCode).orElse(null);
         if (course == null || course.isEnrollmentFull()) {
-            //System.out.println(1);
             return false;
         }
         if (student.getEnrolledCourses().contains(courseCode)) {
-            //System.out.println(2);
             return false; // Already enrolled
         }
         

@@ -118,21 +118,21 @@ public class AdministratorServiceImpl implements AdministratorService {
         }
     }
 
-    @Override
-    public void assignProfessorToCourse(String professorId, String courseCode) {
-        Optional<Professor> professorOpt = professorRepository.findById(professorId);
-        Optional<Course> courseOpt = courseRepository.findById(courseCode);
-        
-        if (professorOpt.isPresent() && courseOpt.isPresent()) {
-            Professor professor = professorOpt.get();
-            Course course = courseOpt.get();
-            course.setProfessorId(professorId); // Assuming Course has a method to set professor ID
-            courseRepository.save(course); // Save the updated course
-            System.out.println("Professor assigned to course successfully!");
-        } else {
-            System.out.println("Professor or Course not found.");
-        }
-    }
+   // @Override
+//    public void assignProfessorToCourse(String professorId, String courseCode) {
+//        Optional<Professor> professorOpt = professorRepository.findById(professorId);
+//        Optional<Course> courseOpt = courseRepository.findById(courseCode);
+//        
+//        if (professorOpt.isPresent() && courseOpt.isPresent()) {
+//            Professor professor = professorOpt.get();
+//            Course course = courseOpt.get();
+//            course.setProfessorId(professorId); // Assuming Course has a method to set professor ID
+//            courseRepository.save(course); // Save the updated course
+//            System.out.println("Professor assigned to course successfully!");
+//        } else {
+//            System.out.println("Professor or Course not found.");
+//        }
+//    }
 
     @Override
     public List<Complaint> viewComplaints() {
@@ -198,5 +198,32 @@ public class AdministratorServiceImpl implements AdministratorService {
             System.out.println("Course not found.");
         }
     }
+    
+    public void assignProfessorToCourse(String professorId, String courseCode) {
+        // Find the professor by ID
+        Optional<Professor> professorOpt = professorRepository.findById(professorId);
+        if (!professorOpt.isPresent()) {
+            System.out.println("Professor not found.");
+            return; // Exit if the professor does not exist
+        }
+
+        // Find the course by code
+        Optional<Course> courseOpt = courseRepository.findByCourseCode(courseCode);
+        if (!courseOpt.isPresent()) {
+            System.out.println("Course not found.");
+            return; // Exit if the course does not exist
+        }
+
+        // Assign the professor to the course
+        Course course = courseOpt.get();
+        Professor professor = professorOpt.get();
+        
+        // Assuming Course has a method to assign a professor
+        course.setProfessor(professor); // Set the professor for the course
+        courseRepository.save(course); // Save the updated course
+
+        System.out.println("Professor " + professor.getName() + " assigned to course " + course.getTitle() + " successfully!");
+    }
+    
     // Additional methods can be added as needed
 }

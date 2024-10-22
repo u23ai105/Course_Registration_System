@@ -149,8 +149,9 @@ public class RegistrationSystem {
             System.out.println("3. View Enrolled Courses");
             System.out.println("4. Drop a Course");
             System.out.println("5. View Grades");
-            System.out.println("6. Submit a Complaint");
-            System.out.println("7. Logout");
+            System.out.println("6. view Complaint");
+            System.out.println("7. Submit a Complaint");
+            System.out.println("8. Logout");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -224,16 +225,16 @@ public class RegistrationSystem {
         String courseCode = scanner.nextLine();
         int credits=0;
         for (Course course : availableCourses) {
-        	System.out.println(course.getCredits());
+        	//System.out.println(course.getCredits());
         	if(course.getCode().equals(courseCode)) credits=course.getCredits();
-        	System.out.println(credits);
+        	//System.out.println(credits);
            // System.out.printf("Code: %s, Title: %s, Credits: %d%n", course.getCode(), course.getTitle(), course.getCredits());
         }
         boolean success = studentService.enrollInCourse(student, courseCode,credits);
         if (success) {
             System.out.println("Successfully enrolled in " + courseCode);
         } else {
-            System.out.println("Failed to enroll in " + courseCode + ". Please check prerequisites or enrollment limits.");
+            System.out.println("Failed to enroll in " + courseCode + ".Please check prerequisites or enrollment limits.");
         }
     }
     
@@ -290,9 +291,9 @@ public class RegistrationSystem {
     private void viewcomplaints(Student student) {
     	List<Complaint> complaints=studentService.viewComplaint(student);
     	if (complaints.isEmpty()) {
-            System.out.println("No grades available.");
+            System.out.println("No Complaints available.");
         } else {
-            System.out.println("Your Grades:");
+            System.out.println("Your Complaints:");
             for (Complaint complaint : complaints) {
             	System.out.println(complaint.getId());
                 System.out.println(complaint.getStudentId());
@@ -362,10 +363,10 @@ public class RegistrationSystem {
                     manageStudentRecords();
                     break;
                 case 3:
-                    //assignProfessorsToCourses();
+                    assignProfessorsToCourses();
                     break;
                 case 4:
-                    //handleComplaints();
+                    handleComplaints();
                     break;
                 case 5:
                     System.out.println("Logging out...");
@@ -389,7 +390,7 @@ public class RegistrationSystem {
          	//System.out.println(course.getCredits());
          	//if(course.getCode().equals(courseCode)) credits=course.getCredits();
          	//System.out.println(credits);
-    		System.out.println(2);
+    		//System.out.println(2);
             System.out.printf("Code: %s, Title: %s, Credits: %d%n", course.getCode(), course.getTitle(), course.getCredits());
          }
     }
@@ -558,6 +559,9 @@ public class RegistrationSystem {
             System.out.println("Enter the prerequiste to be updated or added");
             String preq;
             preq=scanner.nextLine();
+            if(!administratorService.iscourseexist(preq)) System.out.println("This course doeanot exist");
+            Optional<Course> Course=administratorService.findByCourseCode(preq);
+            //if(Course.getSemester()<semesterInput) System.out.println("This corse is not present in the previous semesters");
             if(existingCourse.isprerequisteexist(preq)) {
             	System.out.println("This prerequiste already exists");
             }
@@ -680,46 +684,47 @@ public class RegistrationSystem {
         System.out.print("Enter student ID to delete: ");
         String studentId = scanner.nextLine();
         administratorService.deletestudent(studentId);
-        System.out.println("Student deleted successfully!");
+        //System.out.println("Student deleted successfully!");
     }
 
-//    private void assignProfessorsToCourses() {
-//        System.out.print("Enter course code to assign a professor: ");
-//        String courseCode = scanner.nextLine();
-//        System.out.print("Enter professor ID to assign: ");
-//        String professorId = scanner.nextLine();
-//
-//        Optional<Course> courseOpt = administratorService.findCourseByCode(courseCode);
-//        Optional<Professor> professorOpt = professorService.findProfessorById(professorId);
-//
-//        if (courseOpt.isPresent() && professorOpt.isPresent()) {
-//            Course course = courseOpt.get();
-//            Professor professor = professorOpt.get();
-//            administratorService.assignProfessorToCourse(professor, course);
-//            System.out.println("Professor assigned to course successfully!");
-//        } else {
-//            System.out.println("Course or Professor not found.");
-//        }
-//    }
+    private void assignProfessorsToCourses() {
+        System.out.print("Enter course code to assign a professor: ");
+        String courseCode = scanner.nextLine();
+        System.out.print("Enter professor ID to assign: ");
+        String professorId = scanner.nextLine();
 
-//    private void handleComplaints() {
-//        List<Complaint> complaints = administratorService.getAllComplaints();
-//        if (complaints.isEmpty()) {
-//            System.out.println("No complaints to handle.");
-//            return;
-//        }
-//
-//        System.out.println("Complaints:");
-//        for (Complaint complaint : complaints) {
-//            System.out.printf("ID: %s, Student ID: %s, Text: %s, Status: %s%n",
-//                    complaint.getId(), complaint.getStudentId(), complaint.getText(), complaint.getStatus());
-//        }
-//
-//        System.out.print("Enter complaint ID to update status: ");
-//        String complaintId = scanner.nextLine();
-//        System.out.print("Enter new status: ");
-//        String status = scanner.nextLine();
-//        administratorService.updateComplaintStatus(complaintId, status);
-//        System.out.println("Complaint status updated successfully!");
-//    }
+        Optional<Course> courseOpt = administratorService.findByCourseCode(courseCode);
+        Optional<Professor> professorOpt = professorService.findProfessorById(professorId);
+
+        if(!courseOpt.isPresent()) System.out.println(1);
+        if (courseOpt.isPresent() && professorOpt.isPresent()) {
+//        	Course course = courseOpt.get();
+//            Professor professor = professorOpt.get();
+            administratorService.assignProfessorToCourse(professorId, courseCode);
+            //System.out.println("Professor assigned to course successfully!");
+        } else {
+            System.out.println("Course or Professor not found.");
+        }
+    }
+
+    private void handleComplaints() {
+        List<Complaint> complaints = administratorService.viewComplaints();
+        if (complaints.isEmpty()) {
+            System.out.println("No complaints to handle.");
+            return;
+        }
+
+        System.out.println("Complaints:");
+        for (Complaint complaint : complaints) {
+            System.out.printf("ID: %s, Student ID: %s, Text: %s, Status: %s%n",
+                    complaint.getId(), complaint.getStudentId(), complaint.getDescription(), complaint.getStatus());
+        }
+
+        System.out.print("Enter complaint ID to update status: ");
+        String complaintId = scanner.nextLine();
+        System.out.print("Enter new status: ");
+        String status = scanner.nextLine();
+        administratorService.resolveComplaint(complaintId, status);
+        //System.out.println("Complaint status updated successfully!");
+    }
 }

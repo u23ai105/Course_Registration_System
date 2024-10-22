@@ -7,7 +7,8 @@
     "timings": "Mon, Wed, Fri 10:00 - 11:30 AM",
     "enrollmentLimit": 30,
     "location": "Building A, Room 101",
-    "enrolledStudents": [],
+    "professorId": "USER1728964725995",
+    "enrolledStudents": ["USER1729579707602"],
     "title": "Introduction to Computer Science",
     "department": "Computer Science"
   },
@@ -19,7 +20,7 @@
     "timings": "Tue, Thu 9:00 - 10:30 AM",
     "enrollmentLimit": 40,
     "location": "Building B, Room 202",
-    "enrolledStudents": [],
+    "enrolledStudents": ["USER1729579707602"],
     "title": "Calculus I",
     "department": "Mathematics"
   },
@@ -79,8 +80,23 @@
     "timings": "Mon , Wed, Thu 10:30 AM - 11:30AM",
     "enrollmentLimit": 30,
     "location": "Building A, Room 101",
-    "enrolledStudents": [],
+    "enrolledStudents": ["USER1729579707602"],
     "title": "Database Management System",
     "department": "Computer Science"
+  },
+  {
+    "prerequisites": [
+      "CS102",
+      "CS103"
+    ],
+    "code": "CS201",
+    "Semester": 3,
+    "credits": 4,
+    "timings": "mon,tue,wed 8:30 - 9:30 AM",
+    "enrollmentLimit": 60,
+    "location": "CSE Departmemt",
+    "enrolledStudents": [],
+    "title": "Operating systems",
+    "department": "Artificial Intelligence"
   }
 ]

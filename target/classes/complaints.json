@@ -1,7 +1,17 @@
-[{
-  "studentId": "USER1728835740262",
-  "description": "Fan is not working in the classroom AI101",
-  "submissionDate": "2024-10-20 10:45:19",
-  "id": "COMP1729401319294",
-  "status": "Pending"
-}]
+[
+  {
+    "studentId": "USER1728835740262",
+    "description": "Fan is not working in the classroom AI101",
+    "submissionDate": "2024-10-22 20:58:56",
+    "id": "COMP1729401319294",
+    "resolution": "pending",
+    "status": "Resolved"
+  },
+  {
+    "studentId": "USER1729579707602",
+    "description": "Fan is not working",
+    "submissionDate": "2024-10-22 16:58:11",
+    "id": "COMP1729596491877",
+    "status": "Pending"
+  }
+]
